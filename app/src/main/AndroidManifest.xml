@@ -2,7 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.sunnyweather.android">
 
+    <!--访问网络的声明权限-->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!--android:name=".SunnyWeatherApplication" 当程序启动的时候应该初始化MyApplication类，而不是默认的Application类-->
     <application
+        android:name=".SunnyWeatherApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
