@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--只要是Android 8.0及以上系统的手机，都会使用这个目录下的文件来作为图标-->
 <adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
-    <background android:drawable="@drawable/ic_launcher_background" />
-    <foreground android:drawable="@drawable/ic_launcher_foreground" />
+    <!--图标的背景层，引用的是我们之前设置的颜色值-->
+    <background android:drawable="@color/ic_launcher_background"/>
+    <!--图标的前景层，引用的就是我们之前准备的那张Logo图片-->
+    <foreground android:drawable="@mipmap/ic_launcher_foreground"/>
 </adaptive-icon>
