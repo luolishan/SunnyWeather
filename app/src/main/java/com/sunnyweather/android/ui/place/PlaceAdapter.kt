@@ -34,17 +34,29 @@ class PlaceAdapter(private val fragment: PlaceFragment, private val placeList: L
             // 通过position拿到相应的place实例
             // 获取当前点击项的城市名称和经纬度坐标
             val place = placeList[position]
-            // 把place实例传入Intent中，最后调用startActivity()方法启动WeatherActivity
-            val intent = Intent(parent.context, WeatherActivity::class.java).apply {
-                putExtra("location_lng", place.location.lng)
-                putExtra("location_lat", place.location.lat)
-                putExtra("place_name", place.name)
+            val activity = fragment.activity
+            if (activity is WeatherActivity) {
+                // 关闭滑动菜单
+                activity.binding.drawerLayout.closeDrawers()
+                // 给WeatherViewModel赋值新的经纬度坐标和地区名称
+                activity.viewModel.locationLng = place.location.lng
+                activity.viewModel.locationLat = place.location.lat
+                activity.viewModel.placeName = place.name
+                // 刷新城市的天气信息
+                activity.refreshWeather()
+            } else {
+                // 把place实例传入Intent中，最后调用startActivity()方法启动WeatherActivity
+                val intent = Intent(parent.context, WeatherActivity::class.java).apply {
+                    putExtra("location_lng", place.location.lng)
+                    putExtra("location_lat", place.location.lat)
+                    putExtra("place_name", place.name)
+                }
+                // 调用Fragment的startActivity()方法启动WeatherActivity
+                fragment.startActivity(intent)
+                activity?.finish()
             }
             // 当点击了任何子项布局时，在跳转到WeatherActivity之前，先调用PlaceViewModel的savePlace()方法来存储选中的城市
             fragment.viewModel.savePlace(place)
-            // 调用Fragment的startActivity()方法启动WeatherActivity
-            fragment.startActivity(intent)
-            fragment.activity?.finish()
         }
         return holder
     }

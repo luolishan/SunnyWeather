@@ -1,31 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--使用ScrollView就可以通过滚动的方式查看屏幕以外的内容
-由于ScrollView的内部只允许存在一个直接子布局，因此这里又嵌套了一个垂直方向的LinearLayout
-然后在LinearLayout中将刚才定义的所有布局逐个引入-->
-<ScrollView
+<!--滑动菜单功能-->
+<androidx.drawerlayout.widget.DrawerLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/weatherLayout"
+    android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:scrollbars="none"
-    android:overScrollMode="never"
-    android:visibility="invisible">
-    <!--android:visibility="invisible" 设置控件不可见-->
+    android:layout_height="match_parent">
 
-    <LinearLayout
-        android:orientation="vertical"
+    <!--主屏幕中的内容-->
+    <!--下拉刷新功能-->
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/swipeRefresh"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
-        <!--当前天气信息的布局-->
-        <include android:id="@+id/include_now" layout="@layout/now" />
+        <!--使用ScrollView就可以通过滚动的方式查看屏幕以外的内容
+        由于ScrollView的内部只允许存在一个直接子布局，因此这里又嵌套了一个垂直方向的LinearLayout
+        然后在LinearLayout中将刚才定义的所有布局逐个引入-->
+        <ScrollView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/weatherLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none"
+            android:overScrollMode="never"
+            android:visibility="invisible">
+            <!--android:visibility="invisible" 设置控件不可见-->
 
-        <!--未来几天天气信息的布局-->
-        <include android:id="@+id/include_forecast" layout="@layout/forecast" />
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-        <!--生活指数的布局-->
-        <include android:id="@+id/include_life_index" layout="@layout/life_index" />
+                <!--当前天气信息的布局-->
+                <include android:id="@+id/include_now" layout="@layout/now" />
 
-    </LinearLayout>
+                <!--未来几天天气信息的布局-->
+                <include android:id="@+id/include_forecast" layout="@layout/forecast" />
 
-</ScrollView>
+                <!--生活指数的布局-->
+                <include android:id="@+id/include_life_index" layout="@layout/life_index" />
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <!--滑动菜单中的内容-->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="@color/purple_500">
+
+        <!--搜索全球城市数据的Fragment-->
+        <fragment
+            android:id="@+id/placeFragment"
+            android:name="com.sunnyweather.android.ui.place.PlaceFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="25dp"/>
+
+    </FrameLayout>
+
+</androidx.drawerlayout.widget.DrawerLayout>

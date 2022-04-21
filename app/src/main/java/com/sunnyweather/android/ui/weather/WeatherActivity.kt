@@ -1,6 +1,7 @@
 package com.sunnyweather.android.ui.weather
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.graphics.Color
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -9,14 +10,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsControllerCompat
+import androidx.core.view.*
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.sunnyweather.android.R
@@ -28,7 +28,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class WeatherActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityWeatherBinding
+    lateinit var binding: ActivityWeatherBinding
 
     // 通过ViewModelProvider来获取ViewModel的实例
     // lazy函数这种懒加载技术来获取WeatherViewModel的实例，允许我们在整个类中随时使用viewModel这个变量，而完全不用关心它何时初始化、是否为空等前提条件
@@ -72,9 +72,44 @@ class WeatherActivity : AppCompatActivity() {
                 Toast.makeText(this, "无法成功获取天气信息", Toast.LENGTH_SHORT).show()
                 result.exceptionOrNull()?.printStackTrace()
             }
+            // 调用SwipeRefreshLayout的setRefreshing()方法并传入false，表示刷新事件结束，并隐藏刷新进度条
+            binding.swipeRefresh.isRefreshing = false
         })
+        // 下拉刷新功能
+        // 调用SwipeRefreshLayout的setColorSchemeResources()方法来设置下拉刷新进度条的颜色
+        binding.swipeRefresh.setColorSchemeResources(R.color.purple_500)
+        // 调用一个refreshWeather()方法来执行一次刷新天气的请求
+        refreshWeather()
+        // 调用setOnRefreshListener()方法来设置一个下拉刷新的监听器，当用户进行了下拉刷新操作时，就会回调到Lambda表达式当中，然后处理具体的刷新逻辑就可以了
+        binding.swipeRefresh.setOnRefreshListener {
+            // 执行一次刷新天气的请求
+            refreshWeather()
+        }
+
+        // 滑动菜单的逻辑处理
+        // 切换城市的按钮点击事件
+        binding.includeNow.navBtn.setOnClickListener {
+            // 调用DrawerLayout的openDrawer()方法来打开滑动菜单
+            binding.drawerLayout.openDrawer(GravityCompat.START)
+        }
+        // 监听DrawerLayout的状态，当滑动菜单被隐藏的时候，同时也要隐藏输入法
+        binding.drawerLayout.addDrawerListener(object : DrawerLayout.DrawerListener {
+            override fun onDrawerStateChanged(newState: Int) {}
+            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {}
+            override fun onDrawerOpened(drawerView: View) {}
+            override fun onDrawerClosed(drawerView: View) {
+                val manager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                manager.hideSoftInputFromWindow(drawerView.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
+            }
+        })
+    }
+
+    // 用于刷新天气信息
+    fun refreshWeather() {
         // 调用了WeatherViewModel的refreshWeather()方法来执行一次刷新天气的请求
         viewModel.refreshWeather(viewModel.locationLng, viewModel.locationLat)
+        // 让下拉刷新进度条显示出来
+        binding.swipeRefresh.isRefreshing = true
     }
 
     private fun showWeatherInfo(weather: Weather) {
