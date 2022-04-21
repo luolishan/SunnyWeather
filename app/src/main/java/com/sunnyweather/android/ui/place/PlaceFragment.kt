@@ -1,5 +1,6 @@
 package com.sunnyweather.android.ui.place
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sunnyweather.android.R
 import com.sunnyweather.android.databinding.FragmentPlaceBinding
+import com.sunnyweather.android.ui.weather.WeatherActivity
 
 class PlaceFragment : Fragment() {
     private var _binding: FragmentPlaceBinding? = null
@@ -34,6 +36,25 @@ class PlaceFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        // 如果当前已有存储的城市数据，那么就获取已存储的数据并解析成Place对象，然后使用它的经纬度坐标和城市名直接跳转并传递给WeatherActivity
+        // 这样用户就不需要每次都重新搜索并选择城市了
+        // 用于判断是否有数据已被存储
+        if (viewModel.isPlaceSaved()) {
+            // 读取数据的接口-将Place对象读取出来
+            // 获取当前点击项的城市名称和经纬度坐标
+            val place = viewModel.getSavedPlace()
+            // 然后使用它的经纬度坐标和城市名直接跳转并传递给WeatherActivity，这样用户就不需要每次都重新搜索并选择城市了
+            // 把place实例传入Intent中，最后调用startActivity()方法启动WeatherActivity
+            val intent = Intent(context, WeatherActivity::class.java).apply {
+                putExtra("location_lng", place.location.lng)
+                putExtra("location_lat", place.location.lat)
+                putExtra("place_name", place.name)
+            }
+            // 调用Fragment的startActivity()方法启动WeatherActivity
+            startActivity(intent)
+            activity?.finish()
+            return
+        }
         // LinearLayoutManager 实现纵向滚动
         // LayoutManager用于指定RecyclerView的布局方式
         // LinearLayoutManager是线性布局

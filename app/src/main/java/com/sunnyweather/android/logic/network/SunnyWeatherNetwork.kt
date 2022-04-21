@@ -8,6 +8,7 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
+// 统一的网络数据源访问入口，对所有网络请求的API进行封装
 /*当外部调用SunnyWeatherNetwork的searchPlaces()函数时，Retrofit就会立即发起网络请求，同时当前的协程也会被阻塞住
 直到服务器响应我们的请求之后，await()函数会将解析出来的数据模型对象取出并返回，同时恢复当前协程的执行，searchPlaces()函
 数在得到await()函数的返回值后会将该数据再返回到上一层*/
@@ -16,8 +17,16 @@ object SunnyWeatherNetwork {
     // 调用Retrofit对象的create()方法，并传入具体Service接口所对应的Class类型，创建了一个PlaceService接口的动态代理对象
     private val placeService = ServiceCreator.create<PlaceService>()
 
+    // 调用Retrofit对象的create()方法，并传入具体Service接口所对应的Class类型，创建了一个WeatherService接口的动态代理对象
+    private val weatherService = ServiceCreator.create(WeatherService::class.java)
+
     // 定义了一个searchPlaces()挂起函数，调用刚刚在PlaceService接口中定义的searchPlaces()方法，以发起搜索城市数据请求
     suspend fun searchPlaces(query: String) = placeService.searchPlaces(query).await()
+
+    suspend fun getDailyWeather(lng: String, lat: String) = weatherService.getDailyWeather(lng, lat).await()
+
+    suspend fun getRealtimeWeather(lng: String, lat: String) = weatherService.getRealtimeWeather(lng, lat).await()
+
 
     // 借助协程技术来简化Retrofit回调的写法
     // suspend关键字只能将一个函数声明成挂起函数，是无法给它提供协程作用域的
@@ -36,8 +45,10 @@ object SunnyWeatherNetwork {
                     if (body != null) continuation.resume(body)
                     // 如果为空的话，这里的做法是手动抛出一个异常，你也可以根据自己的逻辑进行更加合适的处理
                     else continuation.resumeWithException(
-                        RuntimeException("response body is null"))
+                        RuntimeException("response body is null")
+                    )
                 }
+
                 override fun onFailure(call: Call<T>, t: Throwable) {
                     continuation.resumeWithException(t)
                 }

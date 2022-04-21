@@ -13,7 +13,7 @@ interface PlaceService {
     //PUT和PATCH请求用于修改服务器上的数据
     //DELETE请求用于删除服务器上的数据
 
-
+    // 查询全球绝大多数城市的数据信息
     //https://api.caiyunapp.com/v2/place?query=北京&token={token}&lang=zh_CN
     @GET("v2/place?token=${SunnyWeatherApplication.TOKEN}&lang=zh_CN")
     // 对带参数的GET请示，可以用 @Query 在实现在URL后面加上参数

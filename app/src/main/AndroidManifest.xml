@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.sunnyweather.android">
-
-    <!--访问网络的声明权限-->
+    <!-- 访问网络的声明权限 -->
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <!--android:name=".SunnyWeatherApplication" 当程序启动的时候应该初始化MyApplication类，而不是默认的Application类-->
     <application
         android:name=".SunnyWeatherApplication"
         android:allowBackup="true"
@@ -14,6 +12,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SunnyWeather">
+        <activity
+            android:name=".ui.weather.WeatherActivity"
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true">

@@ -28,6 +28,14 @@ class PlaceViewModel : ViewModel() {
     fun searchPlaces(query: String) {
         searchLiveData.value = query
     }
+
+    fun savePlace(place: Place) = Repository.savePlace(place)
+
+    fun getSavedPlace() = Repository.getSavedPlace()
+
+    // 用于判断是否有数据已被存储
+    fun isPlaceSaved() = Repository.isPlaceSaved()
+
 }
 
 /*
