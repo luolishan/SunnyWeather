@@ -3,7 +3,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/nowLayout"
     android:layout_width="match_parent"
-    android:layout_height="530dp"
+    android:layout_height="600dp"
     android:orientation="vertical"
     android:fitsSystemWindows="true"
     android:clipToPadding="false">
@@ -84,5 +84,8 @@
         </LinearLayout>
 
     </LinearLayout>
+
+    <!--常用指数的布局-->
+    <include android:id="@+id/include_common_index" layout="@layout/common_index"/>
 
 </RelativeLayout>

@@ -120,6 +120,19 @@ class WeatherActivity : AppCompatActivity() {
         // 填充now.xml布局中的数据 当前天气信息
         val currentTempText = "${realtime.temperature.toInt()} ℃"
         binding.includeNow.currentTemp.text = currentTempText
+
+        val apparentTemperatureText = "${realtime.apparentTemperature.toInt()} ℃"
+        binding.includeNow.includeCommonIndex.apparentTemperatureText.text = apparentTemperatureText
+
+        val humidityText = "${realtime.humidity * 100} %"
+        binding.includeNow.includeCommonIndex.humidityText.text = humidityText
+
+        val windDirectionText = "${realtime.wind.direction.toInt()}"
+        binding.includeNow.includeCommonIndex.windDirectionText.text = windDirectionText
+
+        val windSpeedText = "${realtime.wind.speed.toInt()}"
+        binding.includeNow.includeCommonIndex.windSpeedText.text = windSpeedText
+
         binding.includeNow.currentSky.text = getSky(realtime.skycon).info
         val currentPM25Text = "空气指数 ${realtime.airQuality.aqi.chn.toInt()}"
         binding.includeNow.currentAQI.text = currentPM25Text
